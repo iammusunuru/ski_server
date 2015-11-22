@@ -80,3 +80,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+mongo_url = os.environ['mongo_url']
+mongo_pass = os.environ['mongo_pass']
+mongo_usr = os.environ['mongo_user']
+db_name = os.environ['db_name']
+
+mongo_uri = 'mongodb://'+mongo_usr+':'+mongo_pass+'@'+mongo_url+'/'+db_name
