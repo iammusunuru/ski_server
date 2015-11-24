@@ -6,15 +6,17 @@ class db_layer:
         self.coll = (self.conn[conf.db_name])[coll_name]
 
     def get_data(self,cond):
+        print cond
         cur = self.coll.find(cond)
         l = []
         for i in cur:
             del i['_id']
+            print i
             l.append(i)
         return l
 
 #expect records as list of records
     def set_data(self,records):
-        self.coll.insert_one(records)
+        self.coll.insert_many(records)
 
 
