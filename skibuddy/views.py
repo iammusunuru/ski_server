@@ -58,9 +58,16 @@ def create_event(request):
     db.set_data(data['data'])
     return HttpResponse(json.dumps({'data':"Event created Successfully",'status':"success"}), content_type="application/json")
 
-#@csrf_exempt
-#def join_event(request):
-
+@csrf_exempt
+def join_event(request):
+    data = ((request.body))
+    data = data.replace("'", "\"")
+    data = json.loads(data)
+    if data == '':
+        return HttpResponse(json.dumps({'data':"no data received",'status':"failed"}), content_type="application/json")
+    db = db_layer.db_layer('event_members')
+    db.set_data(data['data'])
+    return HttpResponse(json.dumps({'data':"person joined the event",'status':"success"}), content_type="application/json")
 
 #to get all  pass {} to get selected pass query
 @csrf_exempt
