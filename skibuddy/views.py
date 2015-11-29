@@ -3,7 +3,7 @@ from django.http import HttpResponse
 import db_layer
 from django.views.decorators.csrf import csrf_exempt
 import json
-
+import datetime
 # Create your views here.
 
 # always return JSON objects in the format
@@ -62,3 +62,16 @@ def event_details(request):
     else:
         return HttpResponse(json.dumps({'data':l,'status':"success"}), content_type="application/json")
 
+# need session name user id
+@csrf_exempt
+def start_session(request):
+    data = request.body
+    data = data.replace("'", "\"")
+    data = json.loads(data)
+    db = db_layer.db_layer('ski_session')
+    data['data'][0]['start_time'] = datetime.datetime.utcnow()
+    data['data'][0]['end_time'] = ''
+    data['data'][0]['distance'] = ''
+    data['data'][0]['location_trace'] = ''
+    db.set_data(data['data'])
+    return HttpResponse(json.dumps({'data':"session started",'status':"success"}), content_type="application/json")
