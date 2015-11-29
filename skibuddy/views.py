@@ -4,6 +4,7 @@ import db_layer
 from django.views.decorators.csrf import csrf_exempt
 import json
 import datetime
+
 # Create your views here.
 
 # always return JSON objects in the format
@@ -12,7 +13,7 @@ import datetime
 def home(request):
     return HttpResponse("it worked")
 
-#
+#When the user logs in, we check if it already exists or not. If not, we add it to our db
 @csrf_exempt
 def check_user(request):
     data = ((request.body))
@@ -21,7 +22,6 @@ def check_user(request):
     print data
     db = db_layer.db_layer('user')
     l = db.get_data({'user_id':data['data'][0]['user_id']})
-    print "hi"
     print l
     if not l:
         db.set_data(data['data'])
@@ -33,18 +33,42 @@ def check_user(request):
 #******check time on android side******
 #if many items are there plese send them as a list of {}
 
+#function to autoincrement the event_id
+def autoIncrement():
+    cnt=0;
+    db = db_layer.db_layer('count')
+    l = db.get_count()
+    cnt=l+1;
+    db.set_count(cnt)
+    return cnt
+
+#Created a new event here
 @csrf_exempt
 def create_event(request):
     data = ((request.body))
-    print data
     data = data.replace("'", "\"")
     data = json.loads(data)
-    print data
+    data['data'][0]['event_id']=autoIncrement()
     if data == '':
         return HttpResponse(json.dumps({'data':"no data received",'status':"failed"}), content_type="application/json")
     db = db_layer.db_layer('ski_event')
     db.set_data(data['data'])
     return HttpResponse(json.dumps({'data':"Event created Successfully",'status':"success"}), content_type="application/json")
+
+
+#User is added to the join event table which wll have the user is and event id of the event joined
+@csrf_exempt
+def join_event(request):
+    data = ((request.body))
+    data = data.replace("'", "\"")
+    data = json.loads(data)
+    if data == '':
+        return HttpResponse(json.dumps({'data':"no data received",'status':"failed"}), content_type="application/json")
+    db = db_layer.db_layer('event_members')
+    db.set_data(data['data'])
+    return HttpResponse(json.dumps({'data':"person joined the event",'status':"success"}), content_type="application/json")
+
+
 
 
 #to get all  pass {} to get selected pass query
