@@ -19,12 +19,12 @@ class db_layer:
         self.coll.insert_many(records)
 
     def get_count(self):
-        cur = self.coll.find({},{"count":1})
+        cur = self.coll.find()
         res= cur[0]['count']
         return res
 
     def set_count(self,record):
-        cur = self.coll.save({"_id":"event_id_check","count":record})
+        self.coll.update({"id":"event_id_check"},{'$set':{"count":record}},True)
 
 
 

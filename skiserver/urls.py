@@ -12,6 +12,9 @@ urlpatterns = patterns('',
     url(r'^createEvent/', 'skibuddy.views.create_event', name='create_event'),
     url(r'^fetchEvent/', 'skibuddy.views.event_details', name='event_details'),
     url(r'^joinEvent/', 'skibuddy.views.join_event', name='join_event'),
+     url(r'^getEvents/', 'skibuddy.views.get_events', name='get_event'),
+
     url(r'^admin/', include(admin.site.urls)),
+
 
 )

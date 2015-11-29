@@ -30,8 +30,7 @@ def check_user(request):
         return HttpResponse(json.dumps({'data':" Already exists ",'status':"success"}), content_type="application/json")
 
 
-#******check time on android side******
-#if many items are there plese send them as a list of {}
+
 
 #function to autoincrement the event_id
 def autoIncrement():
@@ -42,6 +41,10 @@ def autoIncrement():
     db.set_count(cnt)
     return cnt
 
+
+#******check time on android side******
+# format 2012-05-29T19:30:03.283Z
+#if many items are there plese send them as a list of {}
 #Created a new event here
 @csrf_exempt
 def create_event(request):
@@ -49,6 +52,8 @@ def create_event(request):
     data = data.replace("'", "\"")
     data = json.loads(data)
     data['data'][0]['event_id']=autoIncrement()
+    data['data'][0]['start_time'] = datetime.datetime.strptime(data['data'][0]['start_time'],'%Y-%m-%dT%H:%M:%S.%fZ')
+    data['data'][0]['end_time'] = datetime.datetime.strptime(data['data'][0]['end_time'],'%Y-%m-%dT%H:%M:%S.%fZ')
     if data == '':
         return HttpResponse(json.dumps({'data':"no data received",'status':"failed"}), content_type="application/json")
     db = db_layer.db_layer('ski_event')
@@ -99,3 +104,16 @@ def start_session(request):
     data['data'][0]['location_trace'] = ''
     db.set_data(data['data'])
     return HttpResponse(json.dumps({'data':"session started",'status':"success"}), content_type="application/json")
+
+@csrf_exempt
+def get_events(request):
+    data = request.body
+    data = data.replace("'", "\"")
+    data = json.loads(data)
+    #put current scheduled joined tags
+    #for current and scheduled check ski seesion db
+    #for joined check event user db
+
+
+
+
