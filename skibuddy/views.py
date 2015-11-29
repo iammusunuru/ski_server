@@ -73,7 +73,22 @@ def join_event(request):
     db.set_data(data['data'])
     return HttpResponse(json.dumps({'data':"person joined the event",'status':"success"}), content_type="application/json")
 
-
+#User is deleted from the join event table
+def unjoin_event(request):
+    print "A"
+    data = ((request.body))
+    data = data.replace("'", "\"")
+    data = json.loads(data)
+    if data == '':
+        return HttpResponse(json.dumps({'data':"no data received",'status':"failed"}), content_type="application/json")
+    print "B"
+    db = db_layer.db_layer('event_members')
+    db.unjoin_event(data['data'][0]['user_id'],data['data'][0]['event_id'])
+    #if val == True:
+        #print "D"
+       # return HttpResponse(json.dumps({'data':"Deleted from the join event table",'status':"success"}), content_type="application/json")
+   # else:
+    return HttpResponse(json.dumps({'data':"No corresponding user-event pair found",'status':"failed"}), content_type="application/json")
 
 
 #to get all  pass {} to get selected pass query

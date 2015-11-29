@@ -27,5 +27,12 @@ class db_layer:
         self.coll.update({"id":"event_id_check"},{'$set':{"count":record}},True)
 
 
+    def unjoin_event(self,userId,eventId):
+        print "C"
+        cur=self.coll.remove({"user_id": userId,"event_id":eventId})
+
+
+
+
 
 
