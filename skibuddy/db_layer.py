@@ -32,6 +32,34 @@ class db_layer:
         cur=self.coll.remove({"user_id": userId,"event_id":eventId})
 
 
+    def getCommonEvents(self,userId,playerId):
+        userEvents = self.coll.find({"user_id":userId},{"event_id":1,"_id":0})
+        userEventList = []
+        for i in userEvents:
+            i = int(i['event_id'])
+            userEventList.append(i)
+        print userEventList
+        playerEvents = self.coll.find({"user_id":playerId},{"event_id":1,"_id":0})
+        playerEventList = []
+        for i in playerEvents:
+            i = int(i['event_id'])
+            playerEventList.append(i)
+        print playerEventList
+        res = list(set(userEventList).intersection(playerEventList))
+        print res
+        playerDetail=[]
+        for i in range(len(res)):
+            cur = self.coll.find({"user_id":playerId,"event_id":res[i]},{"event_id":1,"distance":1,"location_trace":1,"_id":0})
+            for j in cur:
+                 playerDetail.append(j)
+
+        print playerDetail
+        return playerDetail
+
+
+
+
+
 
 
 

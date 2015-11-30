@@ -74,6 +74,8 @@ def join_event(request):
     return HttpResponse(json.dumps({'data':"person joined the event",'status':"success"}), content_type="application/json")
 
 #User is deleted from the join event table
+
+@csrf_exempt
 def unjoin_event(request):
     print "A"
     data = ((request.body))
@@ -84,11 +86,28 @@ def unjoin_event(request):
     print "B"
     db = db_layer.db_layer('event_members')
     db.unjoin_event(data['data'][0]['user_id'],data['data'][0]['event_id'])
-    #if val == True:
-        #print "D"
-       # return HttpResponse(json.dumps({'data':"Deleted from the join event table",'status':"success"}), content_type="application/json")
-   # else:
-    return HttpResponse(json.dumps({'data':"No corresponding user-event pair found",'status':"failed"}), content_type="application/json")
+    return HttpResponse(json.dumps({'data':"user-event pair deleted",'status':"success"}), content_type="application/json")
+
+@csrf_exempt
+def get_skirecords(request):
+    data = ((request.body))
+    data = data.replace("'", "\"")
+    data = json.loads(data)
+    print data
+    print "A"
+    if data == '':
+        return HttpResponse(json.dumps({'data':"no data received",'status':"failed"}), content_type="application/json")
+    print "B"
+    db = db_layer.db_layer('ski_session')
+    print "C"
+    l=db.getCommonEvents(data['data'][0]['user_id'],data['data'][0]['player_id'])
+    if not l:
+        return HttpResponse(json.dumps({'data':"Matched event not found",'status':"failed"}))
+    else:
+     return HttpResponse(json.dumps({'data':"fetched ski records for the events",'status':"success"}), content_type="application/json")
+
+
+
 
 
 #to get all  pass {} to get selected pass query
@@ -105,6 +124,8 @@ def event_details(request):
         return HttpResponse(json.dumps({'data':"Event Notfound",'status':"failed"}))
     else:
         return HttpResponse(json.dumps({'data':l,'status':"success"}), content_type="application/json")
+
+
 
 # need session name user id
 @csrf_exempt
