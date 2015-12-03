@@ -10,7 +10,6 @@ class db_layer:
         l = []
         for i in cur:
             del i['_id']
-            print i
             l.append(i)
         return l
 
@@ -20,6 +19,8 @@ class db_layer:
 
     def get_count(self):
         cur = self.coll.find()
+        if not cur.count():
+            return 1
         res= cur[0]['count']
         return res
 
@@ -55,6 +56,10 @@ class db_layer:
 
         print playerDetail
         return playerDetail
+
+    def update(self,query,cond):
+        self.coll.update(query,{'$set':cond},True)
+
 
 
 
