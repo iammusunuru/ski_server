@@ -1,4 +1,5 @@
 import pymongo
+import json as simplejson
 import skiserver.settings as conf
 class db_layer:
     def __init__(self,coll_name):
@@ -29,8 +30,15 @@ class db_layer:
 
 
     def unjoin_event(self,userId,eventId):
-        print "C"
         cur=self.coll.remove({"user_id": userId,"event_id":eventId})
+
+    def addEventName(self,result):
+        res=[]
+        for i in range(len(result)):
+             cur = self.coll.find({"event_id":result[i]}, {"event_id":1,"title":1,"_id":0})
+             for j in cur:
+                 res.append(j)
+        return res
 
 
     def getCommonEvents(self,userId,playerId):
@@ -39,22 +47,23 @@ class db_layer:
         for i in userEvents:
             i = int(i['event_id'])
             userEventList.append(i)
-        print userEventList
+
         playerEvents = self.coll.find({"user_id":playerId},{"event_id":1,"_id":0})
         playerEventList = []
         for i in playerEvents:
             i = int(i['event_id'])
             playerEventList.append(i)
-        print playerEventList
-        res = list(set(userEventList).intersection(playerEventList))
-        print res
+
+        result = list(set(userEventList).intersection(playerEventList))
+        db = db_layer('ski_event')
+        res=db.addEventName(result)
+
         playerDetail=[]
         for i in range(len(res)):
-            cur = self.coll.find({"user_id":playerId,"event_id":res[i]},{"event_id":1,"distance":1,"location_trace":1,"_id":0})
+            cur = self.coll.find({"user_id":playerId,"event_id":res[i]['event_id'] },{"event_id":1,"distance":1,"location_trace":1,"_id":0})
             for j in cur:
-                 playerDetail.append(j)
-
-        print playerDetail
+                j[u'title'] = res[i]['title']
+                playerDetail.append(j)
         return playerDetail
 
     def update(self,query,cond):
