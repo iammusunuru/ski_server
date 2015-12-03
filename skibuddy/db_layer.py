@@ -66,6 +66,13 @@ class db_layer:
                 playerDetail.append(j)
         return playerDetail
 
+    def getUserRecords(self):
+        userList=[]
+        userRecords = self.coll.find({},{"user_name":1,"user_location.latitude":1,"user_location.longitude":1,"_id":0})
+        for i in userRecords:
+            userList.append(i)
+        return userList
+
     def update(self,query,cond):
         self.coll.update(query,{'$set':cond},True)
 

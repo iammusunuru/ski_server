@@ -105,6 +105,13 @@ def unjoin_event(request):
     db.unjoin_event(data['data'][0]['user_id'],data['data'][0]['event_id'])
     return HttpResponse(json.dumps({'data':"user-event pair deleted",'status':"success"}), content_type="application/json")
 
+'''
+Input format: { "data": [  {  "user_id":"rajini", "player_id":"purvi" } ] }
+Output format: {  "status": "success",
+                 "data": [{ "event_id": 1, "distance": 1, "location_trace": "", "title": "itsnot working }, {"event_id": 2,
+                 "distance": 1, "location_trace": "",   "title": "Ski_competition" }]
+                }
+'''
 @csrf_exempt
 def get_skirecords(request):
     data = ((request.body))
@@ -118,6 +125,20 @@ def get_skirecords(request):
         return HttpResponse(json.dumps({'data':"Matched event not found",'status':"failed"}))
     else:
      return HttpResponse(json.dumps({'data':skiRecords,'status':"success"}), content_type="application/json")
+
+
+@csrf_exempt
+def get_userInfo(request):
+    db = db_layer.db_layer('user')
+    userRecords=db.getUserRecords()
+    if not userRecords:
+        return HttpResponse(json.dumps({'data':"Data not found",'status':"failed"}))
+    else:
+     return HttpResponse(json.dumps({'Response':userRecords,'status':"success"}), content_type="application/json")
+
+
+
+
 
 #to get all  pass {} to get selected pass query
 #gives info of a particular record
