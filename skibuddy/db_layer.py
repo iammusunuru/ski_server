@@ -57,8 +57,8 @@ class db_layer:
         print playerDetail
         return playerDetail
 
-    def update(self,query,cond):
-        self.coll.update(query,{'$set':cond},True)
+    def update(self,query,cond, choice = True):
+        self.coll.update(query,{'$set':cond},choice)
 
 
 

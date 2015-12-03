@@ -16,6 +16,8 @@ urlpatterns = patterns('',
     url(r'^unjoinEvent/', 'skibuddy.views.unjoin_event', name='unjoin_event'),
     url(r'^updateLocation/', 'skibuddy.views.update_currentloc', name='update_currentloc'),
     url(r'^getSkirecords/', 'skibuddy.views.get_skirecords', name='get_skirecords'),
+    url(r'^endSession/', 'skibuddy.views.end_session', name='end_session'),
+
     url(r'^admin/', include(admin.site.urls)),
 
 
