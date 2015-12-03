@@ -68,6 +68,7 @@ class db_layer:
 
     def update(self,query,cond, choice = True):
         self.coll.update(query,{'$set':cond},choice)
+
     def getUserRecords(self):
         userList=[]
         userRecords = self.coll.find({},{"user_name":1,"user_location.latitude":1,"user_location.longitude":1,"_id":0})
