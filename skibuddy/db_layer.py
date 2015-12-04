@@ -75,7 +75,7 @@ class db_layer:
             userList.append(i)
         return userList
 
-    def update(self,query,cond):
+    def update(self,query,cond,choice):
         self.coll.update(query,{'$set':cond},True)
 
 
