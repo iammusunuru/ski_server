@@ -75,8 +75,8 @@ def create_event(request):
     data = json.loads(data)
     x =autoIncrement()
     data['data'][0]['event_id']= x
-    data['data'][0]['start_time'] = datetime.datetime.strptime(data['data'][0]['start_time'],'%Y-%m-%dT%H:%M:%S.%fZ')
-    data['data'][0]['end_time'] = datetime.datetime.strptime(data['data'][0]['end_time'],'%Y-%m-%dT%H:%M:%S.%fZ')
+#    data['data'][0]['start_time'] = datetime.datetime.strptime(data['data'][0]['start_time'],'%Y-%m-%dT%H:%M:%S.%fZ')
+#    data['data'][0]['end_time'] = datetime.datetime.strptime(data['data'][0]['end_time'],'%Y-%m-%dT%H:%M:%S.%fZ')
     if data == '':
         return HttpResponse(json.dumps({'data':"no data received",'status':"failed"}), content_type="application/json")
     db = db_layer.db_layer('ski_event')
@@ -260,7 +260,7 @@ def end_session(request):
     if data == '':
         return HttpResponse(json.dumps({'data':"no data received",'status':"failed"}), content_type="application/json")
     db = db_layer.db_layer('ski_session')
-    db.set_data( [{'location_trace':data['data'][0]['Session_Data'], 'distance':data['data'][0]['distance'], 'end_time': data['data'][0]['end_time'], 'start_time': data['data'][0]['start_time'],
+    db.set_data( [{'session_id':x, 'location_trace':data['data'][0]['Session_Data'], 'distance':data['data'][0]['distance'], 'end_time': data['data'][0]['end_time'], 'start_time': data['data'][0]['start_time'],
                'user_id':data['data'][0]['User_id'],'event_id':data['data'][0]['Event_id']}])
 
 
