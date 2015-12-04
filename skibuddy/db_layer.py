@@ -28,6 +28,8 @@ class db_layer:
     def set_count(self,record):
         self.coll.update({"id":"event_id_check"},{'$set':{"count":record}},True)
 
+    def set_sessionCount(self,record):
+        self.coll.update({"id":"session_id_check"},{'$set':{"count":record}},True)
 
     def unjoin_event(self,userId,eventId):
         cur=self.coll.remove({"user_id": userId,"event_id":eventId})
@@ -60,7 +62,7 @@ class db_layer:
 
         playerDetail=[]
         for i in range(len(res)):
-            cur = self.coll.find({"user_id":playerId,"event_id":res[i]['event_id'] },{"event_id":1,"distance":1,"location_trace":1,"_id":0})
+            cur = self.coll.find({"user_id":playerId,"event_id":res[i]['event_id'] },{"event_id":1,"session_id": 1,"distance":1,"location_trace.latitude":1,"location_trace.longitude":1,"start_time":1,"end_time":1,"_id":0})
             for j in cur:
                 j[u'title'] = res[i]['title']
                 playerDetail.append(j)

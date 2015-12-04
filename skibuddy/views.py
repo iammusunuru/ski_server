@@ -47,6 +47,13 @@ def autoIncrement():
     db.set_count(cnt)
     return cnt
 
+def autoIncrementskiSId():
+    cnt=0;
+    db = db_layer.db_layer('ski_sessionid')
+    l = db.get_count()
+    cnt=l+1;
+    db.set_sessionCount(cnt)
+    return cnt
 
 #******check time on android side******
 # format 2012-05-29T19:30:03.283Z
@@ -165,6 +172,8 @@ def start_session(request):
     data = request.body
     data = data.replace("'", "\"")
     data = json.loads(data)
+    x =autoIncrementskiSId()
+    data['data'][0]['session_id']= x
     db = db_layer.db_layer('ski_session')
     data['data'][0]['start_time'] = datetime.datetime.utcnow()
     data['data'][0]['end_time'] = ''
@@ -241,6 +250,8 @@ def end_session(request):
     data = request.body
     data = data.replace("'", "\"")
     data = json.loads(data)
+    x =autoIncrementskiSId()
+    data['data'][0]['session_id']= x
     if data == '':
         return HttpResponse(json.dumps({'data':"no data received",'status':"failed"}), content_type="application/json")
     db = db_layer.db_layer('ski_session')
