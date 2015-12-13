@@ -77,8 +77,10 @@ class db_layer:
         userList=[]
         userRecords = self.coll.find({},{"user_name":1,"user_location.latitude":1,"user_location.longitude":1,"_id":0,"last_update":1})
         for i in userRecords:
-            if datetime.datetime.utcnow() - datetime.timedelta(seconds = 23) < i['last_updated']:
-                userList.append(i)
+            if 'last_update' in i.keys():
+                if datetime.datetime.utcnow() - datetime.timedelta(seconds = 23) < i['last_update']:
+                    i["last_update"] = str(i["last_update"])
+                    userList.append(i)
         return userList
 
     def update(self,query,cond,choice=True):

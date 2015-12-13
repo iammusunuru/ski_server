@@ -139,7 +139,7 @@ def get_userInfo(request):
     db = db_layer.db_layer('user')
     userRecords=db.getUserRecords()
     if not userRecords:
-        return HttpResponse(json.dumps({'data':"Data not found",'status':"failed"}))
+        return HttpResponse(json.dumps({'data':[],'status':"failed"}))
     else:
      return HttpResponse(json.dumps({'Response':userRecords,'status':"success"}), content_type="application/json")
 
