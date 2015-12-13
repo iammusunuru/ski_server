@@ -280,6 +280,13 @@ def get_eventmembers(request):
     if data == '':
         return HttpResponse(json.dumps({'data':"no data received",'status':"failed"}), content_type="application/json")
     db = db_layer.db_layer("event_members")
+    info = db.get_data(data['data'][0])
+    db = db_layer.db_layer("user")
+    l = []
+    for i in info:
+        l.append(db.get_data({"user_id": i['user_id']})[0]['user_name'])
+    return HttpResponse(json.dumps({'data':{'events': l} ,'status':"success"}), content_type="application/json")
+
 
 
 
