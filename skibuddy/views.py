@@ -73,7 +73,7 @@ def create_event(request):
     data = ((request.body))
     data = data.replace("'", "\"")
     data = json.loads(data)
-    x =autoIncrement()
+    x =str(autoIncrement())
     data['data'][0]['event_id']= x
 #    data['data'][0]['start_time'] = datetime.datetime.strptime(data['data'][0]['start_time'],'%Y-%m-%dT%H:%M:%S.%fZ')
 #    data['data'][0]['end_time'] = datetime.datetime.strptime(data['data'][0]['end_time'],'%Y-%m-%dT%H:%M:%S.%fZ')
@@ -199,10 +199,10 @@ def get_events(request):
     join_data = db.get_data(data['data'][0])
     event_list = []
     for i in join_data:
-        event_list.append(i['event_id'])
+        event_list.append(str(i['event_id']))
     print event_list
     db  = db_layer.db_layer('ski_event')
-    out = {'start_date':[], 'end_date':[], 'start_time':[], 'end_time':[], 'venue':[], 'eventId':[], 'title':[], 'join':[], 'description':[]}
+    out = {'start_time':[], 'end_time':[], 'venue':[], 'eventId':[], 'title':[], 'join':[], 'description':[]}
     event_data = db.get_data({})
 #tailoring the request
     for i in event_data:
@@ -233,10 +233,12 @@ def update_currentloc(request):
     data = request.body
     data = data.replace("'", "\"")
     data = json.loads(data)
+    current_time = datetime.datetime.utcnow()
+
     if data == '':
         return HttpResponse(json.dumps({'data':"no data received",'status':"failed"}), content_type="application/json")
     db = db_layer.db_layer('user')
-    db.update({'user_id':data['data'][0]['user_id']},{'user_location':data['data'][0]['CurrentLocation']})
+    db.update({'user_id':data['data'][0]['user_id']}, {'user_location':data['data'][0]['CurrentLocation'], 'last_update':current_time})
     return HttpResponse(json.dumps({'data':"location updated",'status':"success"}), content_type="application/json")
 
 
@@ -268,6 +270,16 @@ def end_session(request):
 
     return HttpResponse(json.dumps({'data':"session end recorded",'status':"success"}), content_type="application/json")
 
+#this gives all the members present in the given event_id make sure to filter the user_id
+
+@csrf_exempt
+def get_eventmembers(request):
+    data = request.body
+    data = data.replace("'", "\"")
+    data = json.loads(data)
+    if data == '':
+        return HttpResponse(json.dumps({'data':"no data received",'status':"failed"}), content_type="application/json")
+    db = db_layer.db_layer("event_members")
 
 
 

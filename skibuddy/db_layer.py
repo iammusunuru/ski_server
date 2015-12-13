@@ -1,6 +1,8 @@
 import pymongo
 import json as simplejson
 import skiserver.settings as conf
+import datetime
+
 class db_layer:
     def __init__(self,coll_name):
         self.conn = pymongo.MongoClient(conf.mongo_uri)
@@ -73,9 +75,10 @@ class db_layer:
 
     def getUserRecords(self):
         userList=[]
-        userRecords = self.coll.find({},{"user_name":1,"user_location.latitude":1,"user_location.longitude":1,"_id":0})
+        userRecords = self.coll.find({},{"user_name":1,"user_location.latitude":1,"user_location.longitude":1,"_id":0,"last_update":1})
         for i in userRecords:
-            userList.append(i)
+            if datetime.datetime.utcnow() - datetime.timedelta(seconds = 23) < i['last_updated']:
+                userList.append(i)
         return userList
 
     def update(self,query,cond,choice=True):
