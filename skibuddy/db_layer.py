@@ -58,6 +58,9 @@ class db_layer:
             i = int(i['event_id'])
             playerEventList.append(i)
 
+        print userEventList
+        print playerEventList
+
         result = list(set(userEventList).intersection(playerEventList))
         db = db_layer('ski_event')
         res=db.addEventName(result)

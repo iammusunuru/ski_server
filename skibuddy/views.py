@@ -285,7 +285,9 @@ def get_eventmembers(request):
     db = db_layer.db_layer("user")
     l = []
     for i in info:
-        l.append(db.get_data({"user_id": i['user_id']})[0]['user_name'])
+        x = db.get_data({"user_id": i['user_id']})[0]
+        l.append({"user_name":x['user_name'], "user_id":x['user_id']})
+    print l
     return HttpResponse(json.dumps({'data':{'events': l} ,'status':"success"}), content_type="application/json")
 
 
