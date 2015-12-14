@@ -49,13 +49,13 @@ class db_layer:
         userEvents = self.coll.find({"user_id":userId},{"event_id":1,"_id":0})
         userEventList = []
         for i in userEvents:
-            i = int(i['event_id'])
+            i = i['event_id']
             userEventList.append(i)
 
         playerEvents = self.coll.find({"user_id":playerId},{"event_id":1,"_id":0})
         playerEventList = []
         for i in playerEvents:
-            i = int(i['event_id'])
+            i = i['event_id']
             playerEventList.append(i)
 
         result = list(set(userEventList).intersection(playerEventList))
