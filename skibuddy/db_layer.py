@@ -23,7 +23,7 @@ class db_layer:
     def get_count(self):
         cur = self.coll.find()
         if not cur.count():
-            return 1
+            return 0
         res= cur[0]['count']
         return res
 
